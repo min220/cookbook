@@ -2,8 +2,8 @@
 
 :root {
   --ink: #1A1208;
-  --cream: #F5EDD8;
-  --rust: #C4421A;
+  --cream: #EDEAE3;
+  --rust: #FF4D6D;
   --font-serif: 'Playfair Display', serif;
   --font-mono: 'Space Mono', monospace;
 }
@@ -51,10 +51,11 @@ body {
 
 #book-world {
   position: relative;
+  left: 56px;
   cursor: pointer;
   perspective: 1000px;
   transform-style: preserve-3d;
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  transition: transform 0.3s ease-out;
 }
 
 #book-world:hover {
@@ -84,18 +85,24 @@ body {
   width: 220px;
   height: 280px;
   transform-style: preserve-3d;
-  filter: drop-shadow(0px 16px 32px rgba(26,18,8,0.32));
+  border-radius: 3px 8px 8px 3px;
+  box-shadow: 0px 16px 32px rgba(26,18,8,0.32);
+  will-change: transform;
 }
 
 /* ── LEFT COVER — the one that flips ── */
 
 #book-cover-left {
   position: absolute;
-  inset: 0;
+  /* leaves the spine's 10px strip exposed on the left at all times — the cover
+     doesn't extend over the binding, same as a real notebook, and the hinge
+     naturally sits right at the spine's edge */
+  inset: 0 0 0 10px;
   transform-origin: left center;
   transform-style: preserve-3d;
   z-index: 4;
-  border-radius: 3px 8px 8px 3px;
+  border-radius: 0 8px 8px 0;
+  will-change: transform;
 }
 
 
@@ -114,13 +121,15 @@ body {
   pointer-events: none;
 }
 
-/* back of cover — cream, revealed as it swings open */
+/* back of cover — same white as the page/interior, revealed as it swings open.
+   must NOT match the body background, or it blends invisibly into the backdrop
+   once it swings out past the book's footprint. */
 #book-cover-left::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--cream);
-  border-radius: 3px 8px 8px 3px;
+  background: #FFFFFF;
+  border-radius: 0 8px 8px 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform: rotateY(180deg);
@@ -128,14 +137,21 @@ body {
 
 /* ── COVER DETAILS ── */
 
+/* the spine is a direct child of #book, not the rotating cover — it sits behind
+   the closed cover (z-index below it) and is revealed as the cover swings away,
+   staying fixed in place the whole time instead of rotating off with the flap */
 #nb-spine {
   position: absolute;
   left: 0; top: 0; bottom: 0;
   width: 10px;
   background: #0A0804;
   border-radius: 3px 0 0 3px;
-  z-index: 1;
+  z-index: 3;
 }
+
+/* each remaining detail gets its own backface-visibility — relying solely on the
+   parent's setting isn't reliable across browsers for children with their own
+   transform, and they were bleeding through to the back of the cover as a result */
 
 #nb-mark {
   position: absolute;
@@ -146,6 +162,8 @@ body {
   background: var(--rust);
   border-radius: 0 0 3px 3px;
   z-index: 2;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #nb-elastic {
@@ -156,6 +174,8 @@ body {
   background: var(--rust);
   transform: translateY(-50%);
   z-index: 2;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #nb-label {
@@ -165,6 +185,8 @@ body {
   color: rgba(245,237,216,0.45);
   font-family: var(--font-mono);
   z-index: 1;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #nb-hint {
@@ -175,6 +197,8 @@ body {
   font-family: var(--font-mono);
   z-index: 1;
   animation: breathe 2.5s ease-in-out infinite;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 @keyframes breathe {
@@ -187,8 +211,8 @@ body {
 #book-cover-left-inner {
   position: absolute;
   inset: 0;
-  background: #FDE8D4;  /* same cream as the spread */
-  border-radius: 3px 8px 8px 3px;
+  background: #FFFFFF;  /* same white as the spread */
+  border-radius: 0 8px 8px 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   display: flex;
@@ -200,32 +224,24 @@ body {
 #book-cover-right {
   position: absolute;
   inset: 0;
-  background: #FDE8D4;  /* same cream */
-  border-radius: 3px 8px 8px 3px;
+  background: #FFFFFF;  /* same white */
+  border-radius: 0 8px 8px 0;
   z-index: 1;
-}
-/* page edges visible on right side */
-#book-pages-stack {
-  position: absolute;
-  top: 4px; bottom: 4px;
-  left: 10px; right: 4px;
-  background: repeating-linear-gradient(
-    90deg,
-    #EDE5D0 0px, #EDE5D0 1px,
-    #D8CEBC 1px, #D8CEBC 2px
-  );
-  border-radius: 0 6px 6px 0;
-  z-index: 2;
 }
 
 /* ── SPREAD (open state) ── */
 
 #spread {
   position: fixed;
-  inset: 0;
+  inset: 32px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0px 30px 70px rgba(26,18,8,0.3);
   z-index: 5;
   display: flex;
   flex-direction: column;
+  will-change: transform, opacity;
 }
 
 #spread.hidden { display: none; }
@@ -278,14 +294,11 @@ body {
 #pages {
   flex: 1;
   display: flex;
-  margin: 24px 40px 40px;
-  border-radius: 4px;
-  overflow: hidden;
-  filter: drop-shadow(0px 24px 48px rgba(26,18,8,0.18)) drop-shadow(0px 6px 16px rgba(26,18,8,0.1));
 }
 
 #page-left {
   flex: 1;
+  background: #FFFFFF;
   border-right: 1px solid rgba(26,18,8,0.08);
   position: relative;
   transition: background 0.5s ease;
@@ -293,6 +306,7 @@ body {
 
 #page-right {
   flex: 1;
+  background: #FFFFFF;
   position: relative;
   transition: background 0.5s ease;
 }

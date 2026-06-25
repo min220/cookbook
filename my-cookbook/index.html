@@ -15,7 +15,6 @@
       <div id="book">
         <div id="book-cover-left">
           <div id="book-cover-left-inner">
-            <div id="nb-spine"></div>
             <div id="nb-elastic"></div>
             <div id="nb-mark"></div>
             <div id="nb-label">recipes</div>
@@ -23,7 +22,9 @@
           </div>
         </div>
         <div id="book-cover-right"></div>
-        <div id="book-pages-stack"></div>
+        <!-- the spine/binding doesn't rotate with the cover — only the cover flap
+             swings open, the spine stays fixed in place the whole time -->
+        <div id="nb-spine"></div>
       </div>
     </div>
   </div>

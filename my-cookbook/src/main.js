@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { recipes } from './data.js'
+window.gsap = gsap // TEMP
 
 const notebook = document.getElementById('book-world')
 const scene     = document.getElementById('scene')
@@ -36,35 +37,62 @@ function openBook() {
   const coverLeft = document.getElementById('book-cover-left')
   bookWorld.style.pointerEvents = 'none'
 
-  // render spread immediately, sitting behind everything
-  spread.classList.remove('hidden')
-  setPageBg(recipes.filter(r => r.id !== 'index')[0])
+  setPageBg()
   renderSpread(0, false)
-  gsap.set(spread, { opacity: 0, zIndex: 5 })
-  gsap.set('#scene', { zIndex: 20 }) // scene stays on top during animation
 
-  gsap.timeline()
-    // cover swings open
-    .to(coverLeft, {
-      rotateY: -180,
-      duration: 0.75,
-      ease: 'power2.inOut',
+  const bookRect = bookWorld.getBoundingClientRect()
+
+  const tl = gsap.timeline()
+  window.__tl = tl // TEMP
+
+  // STEP 1 — the cover flips open. completely on its own: nothing else is
+  // scheduled until this entire motion has actually finished playing.
+  tl.to(coverLeft, {
+    rotateY: -180,
+    duration: 0.65,
+    ease: 'power2.inOut',
+  })
+  // the spine/elastic are what actually make the rotation visible — a plain white
+  // cover skewing in 3D is nearly invisible on its own, but a straight bar
+  // foreshortening into a diagonal clearly reads as "this is turning." let them
+  // ride the rotation naturally; backface-visibility hides them at the 90° mark.
+
+  // STEP 2 — only once the flip is verifiably done (this runs after step 1
+  // finishes, not at some guessed timestamp) do we measure and swap in the real
+  // page, pre-positioned to match the book's exact size, position, and color.
+  // the swap is invisible because the two states are identical where it matters.
+  tl.call(() => {
+    spread.classList.remove('hidden')
+    const spreadRect = spread.getBoundingClientRect()
+    const scaleX0 = bookRect.width / spreadRect.width
+    const scaleY0 = bookRect.height / spreadRect.height
+    const x0 = (bookRect.left + bookRect.width / 2) - (spreadRect.left + spreadRect.width / 2)
+    const y0 = (bookRect.top + bookRect.height / 2) - (spreadRect.top + spreadRect.height / 2)
+
+    gsap.set([coverLeft, '#book-cover-right'], { opacity: 0 })
+    gsap.set(spread, {
+      opacity: 1, x: x0, y: y0, scaleX: scaleX0, scaleY: scaleY0, zIndex: 15,
+      boxShadow: '0px 10px 20px rgba(26,18,8,0)',
     })
-    // book zooms — spread fades in DURING the zoom so they blend
-    .to(bookWorld, {
-      scale: 2.5,
-      duration: 0.55,
-      ease: 'power3.out',
-    }, '-=0.15')
-    .to(spread, {
-      opacity: 1,
-      duration: 0.4,
-      ease: 'power1.in',
-    }, '-=0.4')  // starts fading in halfway through the zoom
-    .call(() => {
-      scene.style.display = 'none'
-      animateIn()
-    })
+  })
+
+  // STEP 3 — the page, already sitting at the book's exact size/position/color,
+  // zooms in to fill the screen.
+  tl.to(spread, {
+    scaleX: 1, scaleY: 1, x: 0, y: 0,
+    duration: 3.5, // TEMP: slowed way down for inspection
+    ease: 'power2.out',
+  })
+  // the shadow only makes sense once the page is actually big, so it eases in
+  // alongside the zoom instead of popping to full strength at the swap instant
+  tl.to(spread, {
+    boxShadow: '0px 30px 70px rgba(26,18,8,0.3)',
+    duration: 0.8,
+    ease: 'power1.in',
+  }, '<')
+  tl.call(() => {
+    scene.style.display = 'none'
+  })
 }
 // ── CLOSE ──
 
@@ -79,6 +107,8 @@ btnClose.addEventListener('click', () => {
       const bookWorld = document.getElementById('book-world')
       gsap.set(bookWorld, { scale: 1, rotateX: 0, rotateY: 0, clearProps: 'all' })
       gsap.set(coverLeft, { rotateY: 0, clearProps: 'all' })
+      gsap.set('#book-cover-right', { clearProps: 'opacity' })
+      gsap.set(['#nb-spine', '#nb-elastic', '#nb-mark', '#nb-label'], { clearProps: 'opacity' })
       gsap.set('#nb-hint', { opacity: 1 })
 
       scene.style.display = 'flex'
@@ -86,10 +116,10 @@ btnClose.addEventListener('click', () => {
 
       gsap.fromTo(bookWorld,
         { scale: 0.85, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+        { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.out' }
       )
 
-      document.body.style.background = '#F5EDD8'
+      document.body.style.background = '#EDEAE3'
       current = 0
     }
   })
@@ -131,7 +161,6 @@ function turnPage(dir) {
     // snap content in
     .call(() => {
       current = next
-      setPageBg(pageData[current].recipe || null)
       renderSpread(current, true)
     })
     // pages snap back
@@ -143,10 +172,13 @@ function turnPage(dir) {
 
 // ── BACKGROUND ──
 
-function setPageBg(recipe) {
-  const color = recipe?.color || '#F5EDD8'
-  gsap.to(document.body, { backgroundColor: color, duration: 0.5, ease: 'power2.out' })
-  gsap.to([pageL, pageR], { backgroundColor: color, duration: 0.4 })
+function setPageBg() {
+  // the page itself stays white — recipes differentiate via their vibrant accent
+  // color (tags, lines, numbers), not a page-wide wash. the body behind it stays
+  // the contrasting scene color (not white too), so the white card always reads
+  // as a distinct object against its backdrop, open or closed.
+  gsap.to(document.body, { backgroundColor: '#EDEAE3', duration: 0.5, ease: 'power2.out' })
+  gsap.to([pageL, pageR], { backgroundColor: '#FFFFFF', duration: 0.4 })
 }
 
 // ── RENDER ──
