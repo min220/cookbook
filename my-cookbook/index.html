@@ -9,45 +9,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,400&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet" />
 </head>
 <body>
-
   <div id="scene">
-    <div id="book-world">
-      <div id="book">
-        <div id="book-cover-left">
-          <div id="book-cover-left-inner">
-            <div id="nb-elastic"></div>
-            <div id="nb-mark"></div>
-            <div id="nb-label">recipes</div>
-            <div id="nb-hint">open</div>
+    <div id="book">
+
+      <div id="book-left-half">
+        <div id="book-spine"></div>
+        <div id="book-cover">
+          <div id="book-cover-front">
+            <div class="book-elastic"></div>
+            <div class="book-mark"></div>
+            <div class="book-title">recipes</div>
+            <div class="book-hint">open</div>
+          </div>
+          <div id="book-cover-back"></div>
+        </div>
+      </div>
+
+      <div id="book-right-half">
+        <div id="book-pages"></div>
+      </div>
+
+      <div id="book-inner">
+        <div id="top-bar">
+          <button id="btn-close">✕</button>
+          <span id="top-label"></span>
+          <div id="nav">
+            <button id="btn-prev">←</button>
+            <button id="btn-next">→</button>
           </div>
         </div>
-        <div id="book-cover-right"></div>
-        <!-- the spine/binding doesn't rotate with the cover — only the cover flap
-             swings open, the spine stays fixed in place the whole time -->
-        <div id="nb-spine"></div>
+        <div id="pages">
+          <div id="page-left"><div class="page-inner" id="inner-left"></div></div>
+          <div id="page-right"><div class="page-inner" id="inner-right"></div></div>
+        </div>
       </div>
+
     </div>
   </div>
-
-  <div id="spread" class="hidden">
-    <div id="top-bar">
-      <button id="btn-close">✕ close</button>
-      <span id="top-label"></span>
-      <div id="nav">
-        <button id="btn-prev">←</button>
-        <button id="btn-next">→</button>
-      </div>
-    </div>
-    <div id="pages">
-      <div id="page-left">
-        <div class="page-inner" id="inner-left"></div>
-      </div>
-      <div id="page-right">
-        <div class="page-inner" id="inner-right"></div>
-      </div>
-    </div>
-  </div>
-
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
