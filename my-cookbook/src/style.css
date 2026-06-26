@@ -28,7 +28,7 @@ body {
 
 .pg-num {
   position: absolute;
-  bottom: 24px;
+  bottom: 20px;
   font-size: 13px;
   letter-spacing: 0.1em;
   color: rgba(26,18,8,0.25);
@@ -64,7 +64,7 @@ body {
   position: absolute;
   left: 0; top: 0; bottom: 0;
   width: 10px;
-  background: #080604;
+  background: #80081d;
   border-radius: 2px 0 0 2px;
   z-index: 3;
 }
@@ -120,11 +120,7 @@ body {
 }
 
 .book-elastic {
-  position: absolute;
-  left: 0; right: 0; top: 50%;
-  height: 1.5px;
-  background: var(--rust);
-  transform: translateY(-50%);
+  display: none;
 }
 
 .book-mark {
@@ -219,25 +215,22 @@ body {
 #page-left {
   flex: 1;
   position: relative;
-  border-right: 1px solid rgba(26,18,8,0.07);
-  background: #FFFFFF;
+  border-right: 1px solid rgba(26,18,8,0.1);
+  overflow: hidden;
 }
-
 #page-right {
   flex: 1;
   position: relative;
-  background: #FFFFFF;
+  overflow: hidden;
 }
 .page-inner {
   position: absolute;
   inset: 0;
-  padding: 48px 44px 40px;
+  padding: 48px 44px 60px;
   overflow: hidden;
-  /* content renders at full vw size regardless of book size */
   width: 50vw;
   min-height: 100vh;
 }
-
 /* ── CONTENT ── */
 
 .chapter-label {
@@ -272,15 +265,6 @@ body {
   font-style: italic;
 }
 
-
-.chapter-sub {
-  font-size: 15px;
-  color: rgba(26,18,8,0.4);
-  line-height: 1.8;
-  margin-top: 10px;
-  white-space: pre-line;
-}
-
 .chapter-line {
   width: 20px;
   height: 2px;
@@ -290,24 +274,43 @@ body {
 
 .chapter-num {
   font-family: var(--font-serif);
-  font-size: clamp(80px, 14vw, 180px);
+  font-size: clamp(60px, 10vw, 120px);
   font-weight: 900;
-  line-height: 0.85;
+  line-height: 1;
   opacity: 0.06;
   position: absolute;
-  bottom: 24px;
-  right: 28px;
+  bottom: 40px;
+  right: 40px;
   pointer-events: none;
   color: var(--ink);
 }
 
 
-
 .mem-text b { font-style: normal; font-weight: 900; }
 
+
+
+.mem-dash { flex: 1; height: 1px; opacity: 0.2; }
+
+.chapter-sub {
+  font-size: 18px;
+  color: rgba(26,18,8,0.4);
+  line-height: 1.8;
+  margin-top: 10px;
+  white-space: pre-line;
+}
+
+.mem-text {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.9;
+}
+
 .mem-who {
-  margin-top: 16px;
-  font-size: 15px;
+  margin-top: 20px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(26,18,8,0.3);
@@ -316,65 +319,106 @@ body {
   gap: 8px;
 }
 
-.mem-dash { flex: 1; height: 1px; opacity: 0.2; }
+.ing-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dotted rgba(26,18,8,0.1);
+  padding: 10px 0;
+  font-size: clamp(13px, 1.4vw, 16px);
+}
 
-.recipe-sub {
-  font-size: clamp(9px, 0.9vw, 11px);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  font-family: var(--font-mono);
-}
-.recipe-category {
-  display: inline-block;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 2px;
-  margin-bottom: 28px;
-  font-family: var(--font-mono);
-}
+.ing-qty { color: rgba(26,18,8,0.38); font-style: italic; }
+
 .ing-label, .step-label {
-  font-size: 30px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(26,18,8,0.28);
   margin-bottom: 10px;
 }
 
+.step-t {
+  font-size: clamp(13px, 1.4vw, 16px);
+  color: var(--ink);
+  line-height: 1.75;
+}
+
+.step-n {
+  font-size: 10px;
+  width: 18px;
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+
+.secret-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.secret-text {
+  font-size: 13px;
+  color: rgba(26,18,8,0.4);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+.ci-num {
+  font-size: 13px;
+  color: rgba(26,18,8,0.22);
+  width: 22px;
+}
+
+.ci-tag {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+}
+
+.recipe-sub {
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+
+.recipe-category {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 28px;
+  font-family: var(--font-mono);
+}
+#book-cover-front {
+  position: absolute;
+  inset: 0;
+  background-image: url('/cover.png');
+  background-size: cover;
+  background-position: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 0 2px 2px 0;
+}
 
 
-.ing-qty { color: rgba(26,18,8,0.38); font-style: italic; }
 .step-label { margin-top: 12px; }
 .step-row { display: flex; gap: 8px; margin-bottom: 8px; }
 
-.step-n {
-  font-size: 6px;
-  width: 14px;
-  flex-shrink: 0;
-  padding-top: 2px;
-}
+
 
 
 .secret-box {
   margin-top: 12px;
   border-top: 1px solid rgba(26,18,8,0.07);
   padding-top: 10px;
-}
-
-.secret-label {
-  font-size: 6px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.secret-text {
-  font-size: 8px;
-  color: rgba(26,18,8,0.4);
-  font-style: italic;
-  line-height: 1.6;
 }
 
 
@@ -391,7 +435,7 @@ body {
 .contents-row:hover { padding-left: 4px; }
 .contents-row:hover .ci-name { color: var(--rust); }
 
-.ci-num { font-size: 12px; color: rgba(26,18,8,0.22); width: 18px; }
+
 
 .recipe-title {
   font-family: var(--font-serif);
@@ -401,27 +445,7 @@ body {
   line-height: 1.0;
   margin-bottom: 4px;
 }
-.mem-text {
-  font-family: var(--font-serif);
-  font-size: clamp(13px, 1.4vw, 18px);
-  font-style: italic;
-  color: var(--ink);
-  line-height: 1.9;
-}
 
-.ing-row {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px dotted rgba(26,18,8,0.1);
-  padding: 8px 0;
-  font-size: clamp(11px, 1.2vw, 14px);
-}
-
-.step-t {
-  font-size: clamp(11px, 1.2vw, 14px);
-  color: var(--ink);
-  line-height: 1.7;
-}
 
 .contents-title {
   font-family: var(--font-serif);
@@ -439,22 +463,4 @@ body {
   transition: color 0.15s;
 }
 
-.ci-tag {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 2px;
-  font-family: var(--font-mono);
-}
 
-.recipe-category {
-  display: inline-block;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 2px;
-  margin-bottom: 28px;
-  font-family: var(--font-mono);
-}
