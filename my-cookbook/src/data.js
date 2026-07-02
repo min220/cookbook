@@ -52,6 +52,8 @@ export const recipes = [
     chapterNum: '02',
     title: 'banana\nbread',
     chapterSub: 'Spring Time Bake',
+    recipeTitle: 'banana bread',
+    recipeSub: 'a spring ritual',
     memory: `I feel like banana bread is always the "easiest" bake. You take overripe bananas and add eggs,sugar,flour, a rising agent 
     and boom a delicious loaf, but for me its never been that simple. I have no clue if it's me of my dingy oven but I never made a half decent loaf
     till this past spring. Borught it back for my friends and it was recived with such praise. I can do better though, hence the in development. Update. I did better.
