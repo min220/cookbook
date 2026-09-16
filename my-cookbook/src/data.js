@@ -194,9 +194,7 @@ export const recipes = [
     chapterNum: '06',
     title: 'plum\ntorte',
     chapterSub: 'The Oopsies.',
-    memory: `Um so a bit shameful. Second date with this guy, had told him I liked to bake. We baked this torte. TLDR I ghosted him. COMPLETELY MY FAULT. Soz.
-    Anyways I came back to my dorm with a mysterious ziplock bag of what looked like mushy flesh. Not appetizing. Forced my roommate to try nonetheless because it was
-    unfortunately, fucking delicious.`,
+    memory: `The story for the origin of this is a little quesitonable. Let's keep it at that...`,
     who: 'For: the best of people',
     recipeTitle: 'plum torte',
     recipeSub: 'Embarrisingly Delicious',
